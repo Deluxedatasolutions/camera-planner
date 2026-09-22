@@ -19,7 +19,6 @@
   body{display:flex;flex-direction:column;overflow:hidden}
   h1,h2,h3{font-family:"Bebas Neue",Impact,sans-serif;letter-spacing:.04em;font-weight:400;margin:0}
 
-  /* top bar */
   header{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--charcoal);border-bottom:2px solid var(--gold);flex-wrap:wrap}
   header .brand{display:flex;align-items:baseline;gap:10px;margin-right:6px}
   header .brand h1{font-size:28px;color:var(--gold);line-height:1}
@@ -33,15 +32,25 @@
   .btn.primary{background:var(--gold);color:#111;border-color:var(--gold)}
   .btn.primary:hover{background:#ffc733;color:#111}
   .btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+  .btn.on{border-color:var(--gold);color:var(--gold);background:#3b3000}
+  .btn.sm{padding:6px 10px;font-size:12px}
   .btn:disabled{opacity:.5;cursor:default}
   header .actions{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
 
-  /* layout */
   main{flex:1;display:flex;min-height:0}
   aside{width:300px;background:var(--charcoal-2);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
   aside section{padding:14px 16px;border-bottom:1px solid var(--line)}
   aside h2{font-size:18px;color:var(--gold);margin-bottom:8px}
   .hint{font-size:12px;color:var(--muted);line-height:1.4}
+
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg .btn{flex:1;text-align:center}
+  #imgTools{margin-top:10px;display:none}
+  #imgTools.show{display:block}
+  #imgTools .row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  #scaleInfo{font-size:12px;color:var(--gold);margin-top:6px}
+  #dropzone{border:1px dashed var(--line);border-radius:8px;padding:12px;text-align:center;font-size:12px;color:var(--muted);margin-top:8px;cursor:pointer}
+  #dropzone:hover,#dropzone.over{border-color:var(--gold);color:var(--gold)}
 
   .palette{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .pal{background:var(--charcoal-3);border:1px solid var(--line);border-radius:8px;padding:10px;cursor:grab;user-select:none;display:flex;flex-direction:column;gap:4px;transition:border-color .15s}
@@ -49,9 +58,7 @@
   .pal:active{cursor:grabbing}
   .pal b{font-size:13px}
   .pal small{font-size:11px;color:var(--muted)}
-  .pal .sw{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--gold);color:#111;font-size:11px;font-weight:700;text-align:center;line-height:18px;margin-right:6px}
 
-  /* selected camera editor */
   #editor .row{display:flex;align-items:center;gap:8px;margin:8px 0}
   #editor label{font-size:12px;color:var(--muted);width:78px;flex:none}
   #editor input[type=text],#editor select,#editor textarea{flex:1;background:var(--charcoal-3);border:1px solid var(--line);color:var(--text);padding:6px 8px;border-radius:6px;font:inherit;font-size:13px;min-width:0}
@@ -66,7 +73,6 @@
   #editor.empty .content{display:none}
   #editor:not(.empty) .hint{display:none}
 
-  /* camera list */
   #list{list-style:none;margin:0;padding:0}
   #list li{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px}
   #list li:hover{background:var(--charcoal-3)}
@@ -74,9 +80,9 @@
   #list .num{width:22px;height:22px;border-radius:50%;color:#111;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none}
   #list .meta{color:var(--muted);font-size:11px;margin-left:auto;white-space:nowrap}
 
-  /* map */
   #mapwrap{flex:1;position:relative;background:#000}
   #map{position:absolute;inset:0}
+  #map.scaling{cursor:crosshair}
   .leaflet-container{background:#111;font-family:inherit}
   .cam-icon{width:30px;height:30px;border-radius:50%;background:var(--gold);border:3px solid #111;box-shadow:0 2px 6px rgba(0,0,0,.6);color:#111;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:"DM Sans",sans-serif;cursor:grab}
   .cam-icon.sel{outline:3px solid #fff}
@@ -91,14 +97,14 @@
   #maptools{position:absolute;top:10px;right:10px;z-index:800;display:flex;gap:6px;flex-direction:column;align-items:flex-end}
   #maptools .btn{background:rgba(26,26,26,.92)}
   #ghost{position:fixed;pointer-events:none;z-index:9999;display:none;transform:translate(-50%,-50%)}
-  #toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(20,20,20,.95);border:1px solid var(--gold);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none}
+  #toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(20,20,20,.95);border:1px solid var(--gold);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none;max-width:80%;text-align:center}
   #toast.show{opacity:1}
-  #scale{position:absolute;left:10px;bottom:24px;z-index:800}
+  #empty{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:700;pointer-events:none}
+  #empty.show{display:flex}
+  #empty div{background:rgba(20,20,20,.9);border:1px solid var(--line);border-radius:10px;padding:22px 26px;text-align:center;max-width:420px;color:var(--muted);font-size:14px;line-height:1.5}
+  #empty b{color:var(--gold)}
 
-  @media (max-width:820px){
-    aside{width:240px}
-    #address{width:200px}
-  }
+  @media (max-width:820px){ aside{width:240px} #address{width:200px} }
 </style>
 </head>
 <body>
@@ -106,7 +112,7 @@
 <header>
   <div class="brand"><h1>DDS Camera Planner</h1><span>Deluxe Data Solutions</span></div>
   <input id="customer" type="text" placeholder="Customer / job name">
-  <input id="address" type="text" placeholder="Site address (e.g. 12 Smith St, Highfields QLD)">
+  <input id="address" type="text" placeholder="Site address (e.g. 12 Smith St, Dalby QLD)">
   <button class="btn" id="searchBtn">Find address</button>
   <div class="actions">
     <button class="btn" id="loadBtn" title="Open a saved .json design">Open</button>
@@ -116,10 +122,30 @@
     <button class="btn danger" id="clearBtn">Clear</button>
   </div>
   <input type="file" id="fileIn" accept=".json,application/json" hidden>
+  <input type="file" id="imgIn" accept="image/*" hidden>
 </header>
 
 <main>
   <aside>
+    <section>
+      <h2>Background</h2>
+      <div class="seg">
+        <button class="btn sm on" id="baseSat">Satellite</button>
+        <button class="btn sm" id="baseQld">QLD aerial</button>
+        <button class="btn sm" id="baseImage">Own image</button>
+      </div>
+      <p class="hint" style="margin:8px 0 0">Satellite is worldwide imagery. QLD aerial is the Queensland Government photography, usually sharper in regional towns. Own image lets you work off any screenshot or photo.</p>
+      <div id="imgTools">
+        <div id="dropzone">Click to choose an image, drag one here, or just paste (Ctrl+V) a screenshot from Google Maps, Nearmap or QLD Globe.</div>
+        <div class="row">
+          <button class="btn sm" id="scaleBtn">Set scale</button>
+          <button class="btn sm" id="imgReplace">Replace image</button>
+        </div>
+        <div id="scaleInfo">Scale not set. Ranges are a guess until you set it.</div>
+        <p class="hint" style="margin:8px 0 0">To set the scale, click Set scale, then click two points a known distance apart (the Google Maps scale bar, a 6 m wide driveway, a 2.4 m fence panel) and type the distance.</p>
+      </div>
+    </section>
+
     <section>
       <h2>Cameras</h2>
       <p class="hint" style="margin:0 0 10px">Drag a camera onto the map, or click one to drop it in the middle. Drag the camera to move it, drag the white dot to aim it and set the range.</p>
@@ -160,6 +186,7 @@
     <div id="maptools">
       <button class="btn" id="labelsBtn">Street labels: on</button>
     </div>
+    <div id="empty"><div><b>No image loaded.</b><br>Paste a screenshot (Ctrl+V), drop an image file here, or click the box on the left to choose one.</div></div>
     <div id="toast"></div>
   </div>
 </main>
@@ -182,62 +209,191 @@
     {id:'custom',   name:'Custom',       fov:90,  range:20, desc:'Set your own angle and range'}
   ];
   const COLORS = ['#FFB800','#4da3ff','#ff5c5c','#4ccf7a','#c77dff','#ff9f43'];
+  const BASES = {
+    sat: {url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', maxNative:19, attr:'Imagery © Esri, Maxar, Earthstar Geographics'},
+    qld: {url:'https://spatial-img.information.qld.gov.au/arcgis/rest/services/Basemaps/AerialPhotography/MapServer/tile/{z}/{y}/{x}', maxNative:21, attr:'Imagery © State of Queensland (Department of Resources)'}
+  };
+  const LABELS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}';
+  const DEFAULT_VIEW = {center:[-27.4633,151.9511], zoom:16};
 
   // ---------- state ----------
-  let cams = [];          // {id,label,type,fov,range,dir,color,notes,lat,lng}
+  let cams = [];
   let nextId = 1;
   let selected = null;
-  const markers = {};     // id -> {marker, cone, handle}
+  let markers = {};
+  let mode = 'sat';            // 'sat' | 'qld' | 'image'
+  let mpp = 0.1;               // metres per pixel (image mode)
+  let scaleSet = false;
+  let imgData = null, imgEl = null, imgW = 0, imgH = 0;
+  let map = null, baseLayer = null, labelLayer = null, overlay = null;
+  let labelsOn = true;
+  let lastView = {};
+  let scaling = false, scalePts = [], scaleLine = null;
+  let justDragged = 0;
   const $ = s => document.querySelector(s);
 
-  // ---------- map ----------
-  const map = L.map('map', {center:[-27.4633,151.9511], zoom:16, zoomControl:true, preferCanvas:true, maxZoom:21});
-  const imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxNativeZoom:19, maxZoom:21, crossOrigin:'anonymous',
-    attribution:'Imagery © Esri, Maxar, Earthstar Geographics'
-  }).addTo(map);
-  const labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
-    maxNativeZoom:19, maxZoom:21, crossOrigin:'anonymous', opacity:.9
-  }).addTo(map);
-  let labelsOn = true;
-  L.control.scale({metric:true, imperial:false}).addTo(map);
-
-  $('#labelsBtn').onclick = () => {
-    labelsOn = !labelsOn;
-    labelsOn ? labels.addTo(map) : map.removeLayer(labels);
-    $('#labelsBtn').textContent = 'Street labels: ' + (labelsOn ? 'on' : 'off');
-  };
-
-  let justDragged = 0;
-  map.on('click', () => { if(Date.now()-justDragged > 250) select(null); });
-
-  // ---------- geometry ----------
+  // ---------- geometry (mode aware) ----------
+  function offsetM(lat, lng, dxE, dyN){
+    if(mode==='image') return [lat + dyN/mpp, lng + dxE/mpp];
+    return [lat + dyN/111320, lng + dxE/(111320*Math.cos(lat*Math.PI/180))];
+  }
+  function deltaM(from, to){
+    if(mode==='image') return {dx:(to.lng-from.lng)*mpp, dy:(to.lat-from.lat)*mpp};
+    return {dx:(to.lng-from.lng)*111320*Math.cos(from.lat*Math.PI/180), dy:(to.lat-from.lat)*111320};
+  }
   function destination(lat, lng, bearingDeg, metres){
-    const b = bearingDeg * Math.PI/180;
-    const dLat = metres*Math.cos(b)/111320;
-    const dLng = metres*Math.sin(b)/(111320*Math.cos(lat*Math.PI/180));
-    return [lat+dLat, lng+dLng];
+    const b = bearingDeg*Math.PI/180;
+    return offsetM(lat, lng, metres*Math.sin(b), metres*Math.cos(b));
   }
   function bearingAndDist(from, to){
-    const dy = (to.lat-from.lat)*111320;
-    const dx = (to.lng-from.lng)*111320*Math.cos(from.lat*Math.PI/180);
-    const dist = Math.sqrt(dx*dx+dy*dy);
+    const {dx,dy} = deltaM(from,to);
     let b = Math.atan2(dx,dy)*180/Math.PI; if(b<0) b+=360;
-    return {bearing:b, dist};
+    return {bearing:b, dist:Math.sqrt(dx*dx+dy*dy)};
   }
   function conePoints(c){
     const pts = [];
-    if(c.fov >= 360){
-      for(let i=0;i<=48;i++) pts.push(destination(c.lat,c.lng,i*7.5,c.range));
-      return pts;
-    }
+    if(c.fov >= 360){ for(let i=0;i<=48;i++) pts.push(destination(c.lat,c.lng,i*7.5,c.range)); return pts; }
     pts.push([c.lat,c.lng]);
     const steps = Math.max(8, Math.round(c.fov/6));
-    for(let i=0;i<=steps;i++){
-      const a = c.dir - c.fov/2 + (c.fov*i/steps);
-      pts.push(destination(c.lat,c.lng,a,c.range));
-    }
+    for(let i=0;i<=steps;i++){ const a = c.dir - c.fov/2 + (c.fov*i/steps); pts.push(destination(c.lat,c.lng,a,c.range)); }
     return pts;
+  }
+
+  // ---------- map building ----------
+  function viewFor(m){ const v = lastView[m]; return (v && v.center) ? v : (m==='image' ? null : (lastView.sat && lastView.sat.center ? lastView.sat : DEFAULT_VIEW)); }
+  function destroyMap(){
+    if(!map) return;
+    Object.keys(markers).forEach(removeLayers);
+    map.off(); map.remove(); map=null; baseLayer=null; labelLayer=null; overlay=null;
+  }
+  function buildGeoMap(base){
+    const v = viewFor(base);
+    map = L.map('map', {center:v.center, zoom:v.zoom, zoomControl:true, preferCanvas:true, maxZoom:21});
+    setBase(base);
+    labelLayer = L.tileLayer(LABELS_URL, {maxNativeZoom:19, maxZoom:21, crossOrigin:'anonymous', opacity:.9});
+    if(labelsOn) labelLayer.addTo(map);
+    L.control.scale({metric:true, imperial:false}).addTo(map);
+    wireMap();
+  }
+  function setBase(base){
+    if(baseLayer) map.removeLayer(baseLayer);
+    const b = BASES[base];
+    let fails = 0;
+    baseLayer = L.tileLayer(b.url, {maxNativeZoom:b.maxNative, maxZoom:21, crossOrigin:'anonymous', attribution:b.attr});
+    baseLayer.on('tileerror', () => { fails++; if(fails===6) toast(base==='qld' ? 'QLD aerial tiles are not loading here. Try Satellite or Own image.' : 'Imagery is not loading. Check your connection.'); });
+    baseLayer.addTo(map); baseLayer.bringToBack();
+  }
+  function buildImageMap(){
+    map = L.map('map', {crs:L.CRS.Simple, minZoom:-5, maxZoom:5, zoomControl:true, preferCanvas:true, attributionControl:false});
+    if(imgEl){
+      const bounds = [[0,0],[imgH,imgW]];
+      overlay = L.imageOverlay(imgData, bounds).addTo(map);
+      const v = viewFor('image');
+      if(v) map.setView(v.center, v.zoom); else map.fitBounds(bounds);
+    } else map.setView([0,0], 0);
+    $('#empty').classList.toggle('show', !imgEl);
+    wireMap();
+  }
+  function wireMap(){
+    map.on('click', e => {
+      if(scaling){ scaleClick(e.latlng); return; }
+      if(Date.now()-justDragged > 250) select(null);
+    });
+    map.on('moveend', () => { const c = map.getCenter(); lastView[mode] = {center:[c.lat,c.lng], zoom:map.getZoom()}; persist(); });
+    cams.forEach(addLayers);
+    refreshAll();
+  }
+  function switchMode(next){
+    if(next===mode) return;
+    const wasImage = mode==='image', toImage = next==='image';
+    if(wasImage!==toImage && cams.length){
+      if(!confirm('Switching between map and image means the camera positions will not line up. Clear the cameras and switch?')) return;
+      cams=[]; selected=null;
+    }
+    destroyMap(); mode = next;
+    if(toImage) buildImageMap(); else buildGeoMap(next);
+    updateModeUI(); fillEditor(); renderList(); persist();
+  }
+  function updateModeUI(){
+    $('#baseSat').classList.toggle('on', mode==='sat');
+    $('#baseQld').classList.toggle('on', mode==='qld');
+    $('#baseImage').classList.toggle('on', mode==='image');
+    $('#imgTools').classList.toggle('show', mode==='image');
+    $('#labelsBtn').style.display = mode==='image' ? 'none' : '';
+    $('#searchBtn').disabled = mode==='image';
+    $('#address').placeholder = mode==='image' ? 'Site address (for the printout)' : 'Site address (e.g. 12 Smith St, Dalby QLD)';
+    $('#empty').classList.toggle('show', mode==='image' && !imgEl);
+    updateScaleInfo();
+  }
+  function updateScaleInfo(){
+    $('#scaleInfo').textContent = scaleSet ? `Scale set: 1 px = ${mpp.toFixed(3)} m (${(1/mpp).toFixed(1)} px per metre)` : 'Scale not set. Ranges are a guess until you set it.';
+  }
+  $('#baseSat').onclick = () => switchMode('sat');
+  $('#baseQld').onclick = () => switchMode('qld');
+  $('#baseImage').onclick = () => switchMode('image');
+  $('#labelsBtn').onclick = () => {
+    labelsOn = !labelsOn;
+    if(labelLayer){ labelsOn ? labelLayer.addTo(map) : map.removeLayer(labelLayer); }
+    $('#labelsBtn').textContent = 'Street labels: ' + (labelsOn ? 'on' : 'off');
+    persist();
+  };
+
+  // ---------- image loading ----------
+  function loadImageFile(file){
+    if(!file || !file.type.startsWith('image/')){ toast('That is not an image file.'); return; }
+    const rd = new FileReader();
+    rd.onload = () => setImage(rd.result, true);
+    rd.readAsDataURL(file);
+  }
+  function setImage(dataUrl, fresh){
+    const im = new Image();
+    im.onload = () => {
+      if(fresh){
+        scaleSet=false; mpp = 0.1; delete lastView.image;
+        if(cams.length && !confirm('Keep the existing cameras on the new image?')){ cams=[]; selected=null; }
+      }
+      imgEl = im; imgData = dataUrl; imgW = im.naturalWidth; imgH = im.naturalHeight;
+      destroyMap(); mode='image';
+      buildImageMap(); updateModeUI(); fillEditor(); renderList(); persist();
+      if(fresh) toast('Image loaded. Now click Set scale so the camera ranges are right.');
+    };
+    im.onerror = () => toast('Could not read that image.');
+    im.src = dataUrl;
+  }
+  $('#dropzone').onclick = () => $('#imgIn').click();
+  $('#imgReplace').onclick = () => $('#imgIn').click();
+  $('#imgIn').onchange = e => { loadImageFile(e.target.files[0]); e.target.value=''; };
+  document.addEventListener('paste', e => {
+    if(e.target && e.target.matches && e.target.matches('input,textarea')) return;
+    const items = e.clipboardData && e.clipboardData.items; if(!items) return;
+    for(const it of items){ if(it.type.startsWith('image/')){ e.preventDefault(); loadImageFile(it.getAsFile()); return; } }
+  });
+  ['dragenter','dragover'].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); $('#dropzone').classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); $('#dropzone').classList.remove('over'); }));
+  document.addEventListener('drop', e => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if(f) loadImageFile(f); });
+
+  // ---------- scale tool ----------
+  function stopScaling(){
+    scaling=false; scalePts=[];
+    $('#map').classList.remove('scaling'); $('#scaleBtn').classList.remove('on');
+    if(scaleLine){ const l=scaleLine; scaleLine=null; setTimeout(()=>{ if(map) map.removeLayer(l); }, 1500); }
+  }
+  $('#scaleBtn').onclick = () => {
+    if(mode!=='image' || !imgEl){ toast('Load an image first.'); return; }
+    if(scaling){ stopScaling(); return; }
+    scaling = true; scalePts = [];
+    $('#map').classList.add('scaling'); $('#scaleBtn').classList.add('on');
+    toast('Click the first point of a known distance.');
+  };
+  function scaleClick(ll){
+    scalePts.push(ll);
+    if(scalePts.length===1){ scaleLine = L.polyline([ll,ll], {color:'#fff', weight:3, dashArray:'6 6'}).addTo(map); toast('Now click the second point.'); return; }
+    scaleLine.setLatLngs(scalePts);
+    const px = Math.hypot(scalePts[1].lat-scalePts[0].lat, scalePts[1].lng-scalePts[0].lng);
+    const m = parseFloat(prompt('Real distance between those two points, in metres:', ''));
+    if(m>0 && px>0){ mpp = m/px; scaleSet = true; toast(`Scale set: ${px.toFixed(0)} px = ${m} m`); refreshAll(); persist(); }
+    else toast('Scale not changed.');
+    stopScaling(); updateScaleInfo();
   }
 
   // ---------- rendering cameras ----------
@@ -245,22 +401,22 @@
     return L.divIcon({className:'', html:`<div class="cam-icon ${selected===c.id?'sel':''}" style="background:${c.color}">${idx+1}</div>`, iconSize:[30,30], iconAnchor:[15,15]});
   }
   const handleIcon = L.divIcon({className:'', html:'<div class="handle-icon"></div>', iconSize:[14,14], iconAnchor:[7,7]});
-
   function tipText(c){ return `<b>${esc(c.label)}</b><br>${typeName(c.type)} · ${c.fov}° · ${c.range} m`; }
   function typeName(t){ const x = TYPES.find(o=>o.id===t); return x?x.name:t; }
   function esc(s){ return String(s||'').replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
   function addLayers(c){
+    if(!map) return;
     const idx = cams.indexOf(c);
     const cone = L.polygon(conePoints(c), {color:c.color, weight:2, fillColor:c.color, fillOpacity:.3, interactive:true}).addTo(map);
     cone.bindTooltip(tipText(c), {className:'camtip', sticky:true});
-    cone.on('click', e => { L.DomEvent.stopPropagation(e); select(c.id); });
+    cone.on('click', e => { L.DomEvent.stopPropagation(e); if(scaling) scaleClick(e.latlng); else select(c.id); });
 
     const marker = L.marker([c.lat,c.lng], {icon:camIcon(c,idx), draggable:true, zIndexOffset:1000}).addTo(map);
     marker.bindTooltip(tipText(c), {className:'camtip', direction:'top', offset:[0,-16]});
     marker.on('click', e => { L.DomEvent.stopPropagation(e); select(c.id); });
     marker.on('dragstart', () => select(c.id));
-    marker.on('drag', e => { const p = e.target.getLatLng(); c.lat=p.lat; c.lng=p.lng; refresh(c, true); });
+    marker.on('drag', e => { const p = e.target.getLatLng(); c.lat=p.lat; c.lng=p.lng; refresh(c); });
     marker.on('dragend', () => { justDragged=Date.now(); persist(); });
 
     const handle = L.marker(destination(c.lat,c.lng,c.dir,c.range), {icon:handleIcon, draggable:true, zIndexOffset:2000}).addTo(map);
@@ -270,32 +426,32 @@
       const bd = bearingAndDist({lat:c.lat,lng:c.lng}, e.target.getLatLng());
       c.dir = Math.round(bd.bearing);
       c.range = Math.max(3, Math.min(80, Math.round(bd.dist)));
-      refresh(c, false); fillEditor();
+      refresh(c); fillEditor();
     });
     handle.on('dragend', () => { justDragged=Date.now(); persist(); });
-
     markers[c.id] = {marker, cone, handle};
   }
   function removeLayers(id){
     const m = markers[id]; if(!m) return;
-    map.removeLayer(m.marker); map.removeLayer(m.cone); map.removeLayer(m.handle);
+    if(map){ map.removeLayer(m.marker); map.removeLayer(m.cone); map.removeLayer(m.handle); }
     delete markers[id];
   }
-  function refresh(c, moveHandle){
+  function refresh(c){
     const m = markers[c.id]; if(!m) return;
     m.cone.setLatLngs(conePoints(c));
     m.cone.setStyle({color:c.color, fillColor:c.color});
     m.cone.setTooltipContent(tipText(c));
     m.marker.setTooltipContent(tipText(c));
     m.marker.setIcon(camIcon(c, cams.indexOf(c)));
-    if(moveHandle!==false) m.handle.setLatLng(destination(c.lat,c.lng,c.dir,c.range));
-    else m.handle.setLatLng(destination(c.lat,c.lng,c.dir,c.range));
-    renderList();
+    m.marker.setLatLng([c.lat,c.lng]);
+    m.handle.setLatLng(destination(c.lat,c.lng,c.dir,c.range));
   }
-  function refreshAll(){ cams.forEach(c => refresh(c)); }
+  function refreshAll(){ cams.forEach(refresh); renderList(); }
 
   // ---------- add / remove ----------
   function addCamera(typeId, latlng){
+    if(!map) return null;
+    if(mode==='image' && !imgEl){ toast('Load an image first.'); return null; }
     const t = TYPES.find(o=>o.id===typeId) || TYPES[0];
     const c = {id:nextId++, label:'Cam '+(cams.length+1), type:t.id, fov:t.fov, range:t.range, dir:0, color:COLORS[0], notes:'', lat:latlng.lat, lng:latlng.lng};
     cams.push(c); addLayers(c); select(c.id); persist(); return c;
@@ -306,19 +462,12 @@
     if(selected===id) selected=null;
     refreshAll(); fillEditor(); persist();
   }
-  function select(id){
-    selected = id; refreshAll(); fillEditor();
-  }
+  function select(id){ selected = id; refreshAll(); fillEditor(); }
   function cur(){ return cams.find(c=>c.id===selected); }
 
   // ---------- palette ----------
   const pal = $('#palette');
-  TYPES.forEach(t => {
-    const d = document.createElement('div'); d.className='pal'; d.dataset.type=t.id;
-    d.innerHTML = `<b>${t.name}</b><small>${t.desc}</small>`;
-    pal.appendChild(d);
-  });
-  // drag-from-palette (pointer events) + click to drop in centre
+  TYPES.forEach(t => { const d = document.createElement('div'); d.className='pal'; d.dataset.type=t.id; d.innerHTML = `<b>${t.name}</b><small>${t.desc}</small>`; pal.appendChild(d); });
   const ghost = $('#ghost');
   let dragType = null, dragMoved = false, startXY = null;
   pal.addEventListener('pointerdown', e => {
@@ -334,14 +483,12 @@
   pal.addEventListener('pointerup', e => {
     if(!dragType) return;
     ghost.style.display='none';
-    const mapEl = $('#map'), r = mapEl.getBoundingClientRect();
+    const r = $('#map').getBoundingClientRect();
     if(dragMoved){
-      if(e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom){
+      if(map && e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom)
         addCamera(dragType, map.containerPointToLatLng([e.clientX-r.left, e.clientY-r.top]));
-      }
-    } else {
-      addCamera(dragType, map.getCenter());
-      toast('Camera dropped in the middle of the map. Drag it into place.');
+    } else if(map){
+      if(addCamera(dragType, map.getCenter())) toast('Camera dropped in the middle. Drag it into place.');
     }
     dragType=null;
   });
@@ -351,8 +498,7 @@
   const eType = $('#eType');
   TYPES.forEach(t => { const o=document.createElement('option'); o.value=t.id; o.textContent=t.name; eType.appendChild(o); });
   const eColors = $('#eColors');
-  COLORS.forEach(col => { const d=document.createElement('div'); d.className='cdot'; d.style.background=col; d.dataset.c=col; d.onclick=()=>{const c=cur(); if(!c) return; c.color=col; refresh(c); fillEditor(); persist();}; eColors.appendChild(d); });
-
+  COLORS.forEach(col => { const d=document.createElement('div'); d.className='cdot'; d.style.background=col; d.dataset.c=col; d.onclick=()=>{const c=cur(); if(!c) return; c.color=col; refresh(c); fillEditor(); renderList(); persist();}; eColors.appendChild(d); });
   function fillEditor(){
     const c = cur(); const ed = $('#editor');
     if(!c){ ed.classList.add('empty'); return; }
@@ -364,18 +510,18 @@
     $('#eNotes').value=c.notes;
     [...eColors.children].forEach(d => d.classList.toggle('on', d.dataset.c===c.color));
   }
-  $('#eLabel').oninput = e => { const c=cur(); if(c){ c.label=e.target.value; refresh(c); persist(); } };
-  eType.onchange = e => { const c=cur(); if(!c) return; const t=TYPES.find(o=>o.id===e.target.value); c.type=t.id; if(t.id!=='custom'){ c.fov=t.fov; c.range=t.range; } refresh(c); fillEditor(); persist(); };
-  $('#eFov').oninput = e => { const c=cur(); if(c){ c.fov=+e.target.value; if(c.type!=='custom') c.type='custom'; refresh(c); fillEditor(); persist(); } };
-  $('#eRange').oninput = e => { const c=cur(); if(c){ c.range=+e.target.value; refresh(c); fillEditor(); persist(); } };
+  $('#eLabel').oninput = e => { const c=cur(); if(c){ c.label=e.target.value; refresh(c); renderList(); persist(); } };
+  eType.onchange = e => { const c=cur(); if(!c) return; const t=TYPES.find(o=>o.id===e.target.value); c.type=t.id; if(t.id!=='custom'){ c.fov=t.fov; c.range=t.range; } refresh(c); renderList(); fillEditor(); persist(); };
+  $('#eFov').oninput = e => { const c=cur(); if(c){ c.fov=+e.target.value; if(c.type!=='custom') c.type='custom'; refresh(c); renderList(); fillEditor(); persist(); } };
+  $('#eRange').oninput = e => { const c=cur(); if(c){ c.range=+e.target.value; refresh(c); renderList(); fillEditor(); persist(); } };
   $('#eDir').oninput = e => { const c=cur(); if(c){ c.dir=+e.target.value; refresh(c); fillEditor(); persist(); } };
   $('#eNotes').oninput = e => { const c=cur(); if(c){ c.notes=e.target.value; persist(); } };
   $('#delBtn').onclick = () => { if(selected!=null) deleteCamera(selected); };
-  $('#dupBtn').onclick = () => { const c=cur(); if(!c) return; const n = addCamera(c.type, {lat:c.lat, lng:c.lng+0.00008}); Object.assign(n,{fov:c.fov,range:c.range,dir:c.dir,color:c.color,notes:c.notes,type:c.type}); refresh(n); fillEditor(); persist(); };
+  $('#dupBtn').onclick = () => { const c=cur(); if(!c) return; const off = mode==='image' ? 40 : 0.00008; const n = addCamera(c.type, {lat:c.lat, lng:c.lng+off}); if(!n) return; Object.assign(n,{fov:c.fov,range:c.range,dir:c.dir,color:c.color,notes:c.notes,type:c.type}); refresh(n); renderList(); fillEditor(); persist(); };
   document.addEventListener('keydown', e => {
     if(e.target.matches('input,textarea,select')) return;
     if((e.key==='Delete'||e.key==='Backspace') && selected!=null){ deleteCamera(selected); }
-    if(e.key==='Escape') select(null);
+    if(e.key==='Escape'){ select(null); if(scaling) stopScaling(); }
   });
 
   // ---------- list ----------
@@ -384,7 +530,7 @@
     cams.forEach((c,i) => {
       const li=document.createElement('li'); li.className = c.id===selected?'sel':'';
       li.innerHTML = `<span class="num" style="background:${c.color}">${i+1}</span><span>${esc(c.label)}</span><span class="meta">${c.fov}° · ${c.range}m</span>`;
-      li.onclick = () => { select(c.id); map.panTo([c.lat,c.lng]); };
+      li.onclick = () => { select(c.id); if(map) map.panTo([c.lat,c.lng]); };
       ul.appendChild(li);
     });
     $('#count').textContent = cams.length ? '('+cams.length+')' : '';
@@ -393,6 +539,7 @@
 
   // ---------- geocode ----------
   async function geocode(){
+    if(mode==='image' || !map) return;
     const q = $('#address').value.trim(); if(!q) return;
     const btn=$('#searchBtn'); btn.disabled=true; btn.textContent='Searching…';
     try{
@@ -407,27 +554,47 @@
   $('#searchBtn').onclick = geocode;
   $('#address').addEventListener('keydown', e => { if(e.key==='Enter') geocode(); });
   $('#customer').addEventListener('input', persist);
+  $('#address').addEventListener('input', persist);
 
   // ---------- persistence ----------
-  function serialize(){
-    const c = map.getCenter();
-    return {version:1, customer:$('#customer').value, address:$('#address').value, view:{lat:c.lat,lng:c.lng,zoom:map.getZoom()}, labels:labelsOn, cams};
+  function serialize(withImage){
+    if(map){ const c = map.getCenter(); lastView[mode] = {center:[c.lat,c.lng], zoom:map.getZoom()}; }
+    const d = {version:2, mode, customer:$('#customer').value, address:$('#address').value, labels:labelsOn, mpp, scaleSet, cams, views:lastView};
+    if(withImage && imgData) d.image = imgData;
+    return d;
   }
   function load(d){
-    cams.forEach(c=>removeLayers(c.id)); cams=[]; selected=null;
+    destroyMap();
+    cams = Array.isArray(d.cams) ? d.cams : []; selected=null;
+    nextId = cams.reduce((m,c)=>Math.max(m,c.id||0),0)+1;
     $('#customer').value=d.customer||''; $('#address').value=d.address||'';
-    if(d.view) map.setView([d.view.lat,d.view.lng], d.view.zoom);
-    (d.cams||[]).forEach(c => { cams.push(c); addLayers(c); });
-    nextId = cams.reduce((m,c)=>Math.max(m,c.id),0)+1;
-    refreshAll(); fillEditor(); renderList();
+    labelsOn = d.labels!==false; $('#labelsBtn').textContent = 'Street labels: ' + (labelsOn ? 'on' : 'off');
+    mpp = d.mpp||0.1; scaleSet = !!d.scaleSet;
+    lastView = d.views || {};
+    if(d.view && !d.views) lastView.sat = {center:[d.view.lat,d.view.lng], zoom:d.view.zoom};
+    mode = (d.mode==='qld'||d.mode==='image') ? d.mode : 'sat';
+    if(mode==='image'){
+      if(d.image){ setImage(d.image, false); return; }
+      imgEl=null; imgData=null; buildImageMap();
+      if(cams.length) toast('This design was made on an image that was not saved with it. Load the same image again.');
+    } else buildGeoMap(mode);
+    updateModeUI(); fillEditor(); renderList();
   }
-  function persist(){ try{ localStorage.setItem('dds-camera-planner', JSON.stringify(serialize())); }catch(e){} }
-  map.on('moveend', persist);
-  try{ const s = localStorage.getItem('dds-camera-planner'); if(s) load(JSON.parse(s)); }catch(e){}
+  function persist(){
+    try{
+      const d = serialize(true);
+      let s = JSON.stringify(d);
+      if(s.length > 4500000){ delete d.image; s = JSON.stringify(d); }
+      localStorage.setItem('dds-camera-planner', s);
+    }catch(e){}
+  }
+  let restored = false;
+  try{ const s = localStorage.getItem('dds-camera-planner'); if(s){ load(JSON.parse(s)); restored=true; } }catch(e){ restored=false; }
+  if(!restored){ destroyMap(); mode='sat'; buildGeoMap('sat'); updateModeUI(); }
 
   $('#saveBtn').onclick = () => {
     const name = ($('#customer').value||'camera-plan').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-');
-    download(new Blob([JSON.stringify(serialize(),null,2)],{type:'application/json'}), name+'.json');
+    download(new Blob([JSON.stringify(serialize(true))],{type:'application/json'}), name+'.json');
   };
   $('#loadBtn').onclick = () => $('#fileIn').click();
   $('#fileIn').onchange = e => {
@@ -435,17 +602,16 @@
     const rd = new FileReader(); rd.onload = () => { try{ load(JSON.parse(rd.result)); persist(); toast('Design loaded'); }catch(err){ toast('That file is not a saved design.'); } };
     rd.readAsText(f); e.target.value='';
   };
-  $('#clearBtn').onclick = () => { if(!cams.length || confirm('Remove all cameras from this plan?')){ cams.forEach(c=>removeLayers(c.id)); cams=[]; selected=null; refreshAll(); fillEditor(); renderList(); persist(); } };
+  $('#clearBtn').onclick = () => { if(!cams.length || confirm('Remove all cameras from this plan?')){ cams.forEach(c=>removeLayers(c.id)); cams=[]; selected=null; refreshAll(); fillEditor(); persist(); } };
 
   function download(blob, name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
-  let toastT; function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),3500); }
+  let toastT; function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),4000); }
 
   // ---------- export image ----------
   function loadImg(src){ return new Promise(res => { const im=new Image(); im.crossOrigin='anonymous'; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
-  async function drawTiles(ctx, layer, size, pb, zoom){
+  async function drawTiles(ctx, layer, pb, zoom){
     const nz = Math.min(zoom, layer.options.maxNativeZoom || zoom);
-    const scale = Math.pow(2, zoom-nz);
-    const ts = 256*scale;
+    const ts = 256*Math.pow(2, zoom-nz);
     const x0 = Math.floor(pb.min.x/ts), x1 = Math.floor(pb.max.x/ts);
     const y0 = Math.floor(pb.min.y/ts), y1 = Math.floor(pb.max.y/ts);
     const jobs=[];
@@ -456,22 +622,24 @@
     await Promise.all(jobs);
   }
   async function renderPlan(){
-    const size = map.getSize(), zoom = map.getZoom(), pb = map.getPixelBounds();
-    const W = size.x, H = size.y;
+    const size = map.getSize(), W = size.x, H = size.y;
     const cv = document.createElement('canvas'); cv.width=W; cv.height=H;
     const ctx = cv.getContext('2d');
     ctx.fillStyle='#111'; ctx.fillRect(0,0,W,H);
-    await drawTiles(ctx, imagery, size, pb, zoom);
-    if(labelsOn){ ctx.globalAlpha=.9; await drawTiles(ctx, labels, size, pb, zoom); ctx.globalAlpha=1; }
     const pt = ll => { const p = map.latLngToContainerPoint(ll); return [p.x,p.y]; };
-    // cones
+    if(mode==='image'){
+      if(imgEl){ const [x0,y0] = pt([imgH,0]); const [x1,y1] = pt([0,imgW]); ctx.drawImage(imgEl, x0, y0, x1-x0, y1-y0); }
+    } else {
+      const zoom = map.getZoom(), pb = map.getPixelBounds();
+      await drawTiles(ctx, baseLayer, pb, zoom);
+      if(labelsOn){ ctx.globalAlpha=.9; await drawTiles(ctx, labelLayer, pb, zoom); ctx.globalAlpha=1; }
+    }
     cams.forEach(c => {
       const pts = conePoints(c).map(pt);
       ctx.beginPath(); pts.forEach((p,i)=> i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
       ctx.fillStyle = hexA(c.color,.32); ctx.fill();
       ctx.strokeStyle = c.color; ctx.lineWidth=2; ctx.stroke();
     });
-    // markers
     ctx.font='bold 13px "DM Sans", sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
     cams.forEach((c,i) => {
       const [x,y] = pt([c.lat,c.lng]);
@@ -479,10 +647,10 @@
       ctx.beginPath(); ctx.arc(x,y,12,0,Math.PI*2); ctx.fillStyle=c.color; ctx.fill();
       ctx.fillStyle='#111'; ctx.fillText(String(i+1), x, y+1);
     });
-    // footer strip
     ctx.fillStyle='rgba(0,0,0,.7)'; ctx.fillRect(0,H-26,W,26);
     ctx.fillStyle='#ccc'; ctx.font='11px "DM Sans", sans-serif'; ctx.textAlign='left';
-    ctx.fillText('Imagery © Esri, Maxar, Earthstar Geographics  ·  Camera positions and fields of view are indicative only', 8, H-13);
+    const credit = mode==='image' ? 'Background: supplied site image' : BASES[mode].attr;
+    ctx.fillText(credit + '  ·  Camera positions and fields of view are indicative only', 8, H-13);
     ctx.textAlign='right'; ctx.fillStyle='#FFB800'; ctx.font='bold 12px "DM Sans", sans-serif';
     ctx.fillText('Deluxe Data Solutions  ·  1300 002 404', W-8, H-13);
     return cv;
@@ -490,7 +658,7 @@
   function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
 
   $('#pngBtn').onclick = async () => {
-    toast('Building image…');
+    if(!map) return; toast('Building image…');
     try{
       const cv = await renderPlan();
       const name = ($('#customer').value||'camera-plan').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-');
@@ -499,11 +667,12 @@
   };
 
   $('#printBtn').onclick = async () => {
-    toast('Preparing print view…');
+    if(!map) return; toast('Preparing print view…');
     let cv; try{ cv = await renderPlan(); }catch(e){ toast('Export failed: '+e.message); return; }
     const img = cv.toDataURL('image/png');
     const rows = cams.map((c,i)=>`<tr><td><span class="n" style="background:${c.color}">${i+1}</span></td><td>${esc(c.label)}</td><td>${typeName(c.type)}</td><td>${c.fov}°</td><td>${c.range} m</td><td>${esc(c.notes)}</td></tr>`).join('');
     const d = new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+    const credit = mode==='image' ? '' : ' ' + BASES[mode].attr + '.';
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Camera plan – ${esc($('#customer').value||'')}</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -525,14 +694,12 @@
 <div class="co"><b>Deluxe Data Solutions</b>1300 002 404 · deluxedatasolutions.com.au</div></div>
 <img src="${img}">
 <table><thead><tr><th>#</th><th>Camera</th><th>Type</th><th>Lens angle</th><th>Range</th><th>Notes</th></tr></thead><tbody>${rows||'<tr><td colspan=6>No cameras placed.</td></tr>'}</tbody></table>
-<p class="ft">Camera positions and fields of view are indicative only and may change on site depending on mounting points, cabling routes and obstructions. Imagery © Esri, Maxar, Earthstar Geographics.</p>
+<p class="ft">Camera positions and fields of view are indicative only and may change on site depending on mounting points, cabling routes and obstructions.${credit}</p>
 <script>window.onload=function(){setTimeout(function(){window.print()},400)}<\/script>
 </body></html>`;
     const w = window.open('', '_blank'); if(!w){ toast('Pop-up blocked. Allow pop-ups for this page to print.'); return; }
     w.document.open(); w.document.write(html); w.document.close();
   };
-
-  renderList(); fillEditor();
 })();
 </script>
 </body>
